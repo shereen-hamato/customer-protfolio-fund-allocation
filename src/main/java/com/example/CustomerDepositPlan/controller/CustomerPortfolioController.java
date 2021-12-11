@@ -13,7 +13,7 @@ import java.util.Set;
 
 
 @RestController
-@RequestMapping(path = "/portfolio")
+@RequestMapping(path = "/")
 public class CustomerPortfolioController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerPortfolioController.class);
@@ -25,7 +25,7 @@ public class CustomerPortfolioController {
     }
 
 
-    @PostMapping
+    @PostMapping(path = "portfolio")
     @ResponseStatus(HttpStatus.CREATED)
     public Set<Portfolio> createPortfolios(@RequestBody @Validated FundDistributionRequest fundDistributionRequest) {
         PlanProcessor planProcessor = new PlanProcessor(fundDistributionRequest.getDepositPlanList(), fundDistributionRequest.getFundDepositList());
