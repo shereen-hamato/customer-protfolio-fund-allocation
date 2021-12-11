@@ -18,11 +18,16 @@ public class CustomerPortfolioController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerPortfolioController.class);
 
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public String getPortfolios() {
+        return "welcome!";
+    }
 
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Set<Portfolio> getPortfolios(@RequestBody @Validated FundDistributionRequest fundDistributionRequest) {
+    public Set<Portfolio> createPortfolios(@RequestBody @Validated FundDistributionRequest fundDistributionRequest) {
         PlanProcessor planProcessor = new PlanProcessor(fundDistributionRequest.getDepositPlanList(), fundDistributionRequest.getFundDepositList());
         return planProcessor.distributeFund();
     }

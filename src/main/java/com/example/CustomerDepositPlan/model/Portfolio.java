@@ -4,8 +4,8 @@ package com.example.CustomerDepositPlan.model;
 import java.util.Objects;
 
 public class Portfolio {
-    String name;
-    Double amount;
+    private String name;
+    private Double amount;
 
     public Portfolio() {
     }

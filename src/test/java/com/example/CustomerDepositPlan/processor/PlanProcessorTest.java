@@ -3,6 +3,7 @@ package com.example.CustomerDepositPlan.processor;
 import com.example.CustomerDepositPlan.model.DepositPlan;
 import com.example.CustomerDepositPlan.model.FundDeposit;
 import com.example.CustomerDepositPlan.model.Portfolio;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +20,11 @@ import static org.junit.Assert.*;
 @SpringBootTest
 public class PlanProcessorTest {
 
+    private List<DepositPlan> depositPlanList;
 
-    @Test
-    public void distributeFund() {
-
-        List<DepositPlan> depositPlanList = new ArrayList<>();
+    @Before
+    public void init() {
+        depositPlanList = new ArrayList<>();
         DepositPlan plan1 = new DepositPlan();
         plan1.setPortfolioList(getPortfolioList(2, 10000.0, 100.0));
         plan1.setType("1");
@@ -32,13 +33,49 @@ public class PlanProcessorTest {
         plan2.setPortfolioList(getPortfolioList(2, 0.0, 500.0));
         //plan2.setType("2");
         depositPlanList.add(plan2);
+    }
+
+
+    @Test
+    public void givenFundDepositEquivalentToPlanAmount_allFundIsDistributed() {
 
         List<FundDeposit> fundDepositList = getFundDepositList(2, 10000.0, 600.0);
 
         PlanProcessor planProcessor = new PlanProcessor(depositPlanList, fundDepositList);
         Set<Portfolio> portfolioList = planProcessor.distributeFund();
 
-        System.out.println(portfolioList);
+        Double totalInPortfolio = portfolioList.stream().map(Portfolio::getAmount).reduce(Double::sum).get();
+
+        assertEquals(new Double(10600.0), totalInPortfolio);
+
+
+    }
+
+    @Test
+    public void givenFundDepositMoreThanPlanAmount_allFundIsDistributed() {
+        List<FundDeposit> fundDepositList = getFundDepositList(2, 15000.0, 1600.0);
+
+        PlanProcessor planProcessor = new PlanProcessor(depositPlanList, fundDepositList);
+        Set<Portfolio> portfolioList = planProcessor.distributeFund();
+
+        Double totalInPortfolio = portfolioList.stream().map(Portfolio::getAmount).reduce(Double::sum).get();
+
+        assertEquals(new Double(16600.0), totalInPortfolio);
+
+
+    }
+
+    @Test
+    public void givenFundDepositLessThanPlanAmount_allFundIsDistributed() {
+
+        List<FundDeposit> fundDepositList = getFundDepositList(2, 5000.0, 100.0);
+
+        PlanProcessor planProcessor = new PlanProcessor(depositPlanList, fundDepositList);
+        Set<Portfolio> portfolioList = planProcessor.distributeFund();
+
+        Double totalInPortfolio = portfolioList.stream().map(Portfolio::getAmount).reduce(Double::sum).get();
+
+        assertEquals(new Double(5100.0), totalInPortfolio);
 
 
     }

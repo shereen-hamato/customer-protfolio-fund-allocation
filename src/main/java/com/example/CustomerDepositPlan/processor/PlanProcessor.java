@@ -3,6 +3,7 @@ package com.example.CustomerDepositPlan.processor;
 import com.example.CustomerDepositPlan.model.DepositPlan;
 import com.example.CustomerDepositPlan.model.FundDeposit;
 import com.example.CustomerDepositPlan.model.Portfolio;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -28,7 +29,10 @@ public class PlanProcessor {
 
 
     public Set<Portfolio> distributeFund() {
-        Optional<DepositPlan> oneTimePlan = depositPlanList.stream().filter(depositPlan -> depositPlan.getType().equals("1")).findFirst();
+        Optional<DepositPlan> oneTimePlan = depositPlanList
+                .stream()
+                .filter(this::isOneTimePlanType)
+                .findFirst();
 
         if (depositPlanList.size() > 1 && oneTimePlan.isPresent()) {
             addFundToPortfolioAccordingToDepositPlan(oneTimePlan.get());
@@ -42,6 +46,10 @@ public class PlanProcessor {
         }
 
         return customerPortfolioList;
+    }
+
+    private boolean isOneTimePlanType(DepositPlan depositPlan) {
+        return depositPlan.getType().equals("1");
     }
 
     private void addFundToPortfolioAccordingToDepositPlan(DepositPlan depositPlan) {

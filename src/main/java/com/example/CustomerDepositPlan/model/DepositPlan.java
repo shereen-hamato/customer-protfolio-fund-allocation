@@ -1,14 +1,13 @@
 package com.example.CustomerDepositPlan.model;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class DepositPlan {
-    String type = "2";
-    String name;
+    private String type = "2";
+    private String name;
     @NotEmpty
-    List<Portfolio> portfolioList;
+    private List<Portfolio> portfolioList;
 
 
     public String getName() {

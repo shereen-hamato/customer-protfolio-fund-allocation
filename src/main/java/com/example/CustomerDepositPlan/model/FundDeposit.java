@@ -2,7 +2,7 @@ package com.example.CustomerDepositPlan.model;
 
 
 public class FundDeposit {
-    Double amount;
+    private Double amount;
 
     public FundDeposit() {
 

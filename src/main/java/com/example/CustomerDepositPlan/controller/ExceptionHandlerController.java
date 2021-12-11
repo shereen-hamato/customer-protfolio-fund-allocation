@@ -17,19 +17,6 @@ import java.util.NoSuchElementException;
 public class ExceptionHandlerController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionHandlerController.class);
 
-
-    @ExceptionHandler(NoSuchElementException.class)
-    public void handleNoSuchElementException(NoSuchElementException ex, HttpServletResponse res) throws IOException {
-        LOGGER.error("Handled No Such element Exception", ex);
-        res.sendError(HttpStatus.NOT_FOUND.value(), ex.getMessage());
-    }
-
-    @ExceptionHandler(RuntimeException.class)
-    public void handleRunTimeException(RuntimeException ex, HttpServletResponse res) throws IOException {
-        LOGGER.error("Handled No Such element Exception", ex);
-        res.sendError(HttpStatus.FORBIDDEN.value(), ex.getMessage());
-    }
-
     @ExceptionHandler(Exception.class)
     public void handleException(Exception ex, HttpServletResponse res) throws IOException {
         LOGGER.error("Handled Internal Error Exception", ex);
