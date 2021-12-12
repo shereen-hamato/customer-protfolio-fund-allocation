@@ -3,11 +3,11 @@ package com.example.CustomerDepositPlan.processor;
 import com.example.CustomerDepositPlan.model.DepositPlan;
 import com.example.CustomerDepositPlan.model.FundDeposit;
 import com.example.CustomerDepositPlan.model.Portfolio;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Component;
 
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class PlanProcessor {
@@ -35,13 +35,13 @@ public class PlanProcessor {
                 .findFirst();
 
         if (depositPlanList.size() > 1 && oneTimePlan.isPresent()) {
-            addFundToPortfolioAccordingToDepositPlan(oneTimePlan.get());
+            addFundToCustomerPortfoliosAccordingToDepositPlan(oneTimePlan.get());
             depositPlanList.remove(oneTimePlan.get());
         }
 
         while (!fundDepositList.isEmpty()) {
             for (DepositPlan depositPlan : depositPlanList) {
-                addFundToPortfolioAccordingToDepositPlan(depositPlan);
+                addFundToCustomerPortfoliosAccordingToDepositPlan(depositPlan);
             }
         }
 
@@ -52,19 +52,19 @@ public class PlanProcessor {
         return depositPlan.getType().equals("1");
     }
 
-    private void addFundToPortfolioAccordingToDepositPlan(DepositPlan depositPlan) {
+    private void addFundToCustomerPortfoliosAccordingToDepositPlan(DepositPlan depositPlan) {
         for (Portfolio planPortfolio : depositPlan.getPortfolioList()) {
             Portfolio matchingCustomerPortfolio = customerPortfolioList
                     .stream()
                     .filter(planPortfolio::equals)
                     .findFirst().get();
 
-            distributeFundForPlanPortfolio(planPortfolio, matchingCustomerPortfolio, fundDepositList);
+            addFundToPortfolio(planPortfolio, matchingCustomerPortfolio, fundDepositList);
         }
     }
 
 //todo: documentations
-    private void distributeFundForPlanPortfolio(Portfolio planPortfolio, Portfolio customerPortfolio, List<FundDeposit> fundDepositList) {
+    private void addFundToPortfolio(Portfolio planPortfolio, Portfolio customerPortfolio, List<FundDeposit> fundDepositList) {
 
         Double amountNeedToBeAdded = planPortfolio.getAmount();
 
